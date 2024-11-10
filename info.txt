@@ -1,0 +1,99 @@
+To design your API structure for CRUD operations on the `Movie`, `Genre`, and `Director` entities, you'll need to follow RESTful conventions. Here’s a detailed breakdown of the URLs and the HTTP methods for each operation:
+
+ 1. Movie CRUD API:
+- GET `/api/movies`  
+  - Purpose: Retrieve all movies.
+  - Method: `GET`
+  
+- GET `/api/movies/{id}`  
+  - Purpose: Retrieve a specific movie by its ID.
+  - Method: `GET`
+  
+- POST `/api/movies`  
+  - Purpose: Create a new movie.
+  - Method: `POST`
+  - Request Body: Movie details (e.g., title, genre, director).
+
+- PUT `/api/movies/{id}`  
+  - Purpose: Fully update a movie by its ID (update all properties).
+  - Method: `PUT`
+  - Request Body: Updated movie details.
+  
+- PATCH `/api/movies/{id}`  
+  - Purpose: Partially update a movie by its ID (update only some properties).
+  - Method: `PATCH`
+  - Request Body: Properties to be updated.
+
+- DELETE `/api/movies/{id}`  
+  - Purpose: Delete a movie by its ID.
+  - Method: `DELETE`
+
+---
+
+ 2. Genre CRUD API:
+ URL: `/api/genres`
+- GET `/api/genres`  
+  - Purpose: Retrieve all genres.
+  - Method: `GET`
+  
+- GET `/api/genres/{id}`  
+  - Purpose: Retrieve a specific genre by its ID.
+  - Method: `GET`
+  
+- POST `/api/genres`  
+  - Purpose: Create a new genre.
+  - Method: `POST`
+  - Request Body: Genre details.
+
+- PUT `/api/genres/{id}`  
+  - Purpose: Fully update a genre by its ID.
+  - Method: `PUT`
+  - Request Body: Updated genre details.
+
+- PATCH `/api/genres/{id}`  
+  - Purpose: Partially update a genre by its ID.
+  - Method: `PATCH`
+  - Request Body: Properties to be updated.
+
+- DELETE `/api/genres/{id}`  
+  - Purpose: Delete a genre by its ID.
+  - Method: `DELETE`
+
+---
+
+ 3. Director CRUD API:
+ URL: `/api/directors`
+- GET `/api/directors`  
+  - Purpose: Retrieve all directors.
+  - Method: `GET`
+  
+- GET `/api/directors/{id}`  
+  - Purpose: Retrieve a specific director by their ID.
+  - Method: `GET`
+  
+- POST `/api/directors`  
+  - Purpose: Create a new director.
+  - Method: `POST`
+  - Request Body: Director details.
+
+- PUT `/api/directors/{id}`  
+  - Purpose: Fully update a director by their ID.
+  - Method: `PUT`
+  - Request Body: Updated director details.
+
+- PATCH `/api/directors/{id}`  
+  - Purpose: Partially update a director by their ID.
+  - Method: `PATCH`
+  - Request Body: Properties to be updated.
+
+- DELETE `/api/directors/{id}`  
+  - Purpose: Delete a director by their ID.
+  - Method: `DELETE`
+
+---
+
+- GET: Retrieve resources or individual items.
+- POST: Create new resources.
+- PUT: Update an entire resource, replacing it with the new data.
+- PATCH: Update part of the resource (e.g., change a specific field).
+- DELETE: Remove a resource.
