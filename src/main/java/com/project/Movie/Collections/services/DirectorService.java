@@ -17,7 +17,7 @@ public interface DirectorService {
 
     boolean existsById(Long id);
 
-    DirectorEntity partialUpdate(Long id, DirectorEntity director);
+    DirectorEntity partialUpdate(String name, DirectorEntity director);
 
-    void delete(Long id);
+    void delete(String name);
 }

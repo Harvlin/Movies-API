@@ -27,7 +27,8 @@ public class DirectorServiceImpl implements DirectorService {
                 .map(existingDirector -> {
                     existingDirector.setAge(director.getAge());
                     return directorRepository.save(existingDirector);
-                }).orElseGet(() -> directorRepository.save(director));
+                })
+                .orElseGet(() -> directorRepository.save(director));
     }
 
     @Override
@@ -47,8 +48,8 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Transactional
     @Override
-    public DirectorEntity partialUpdate(Long id, DirectorEntity director) {
-        return directorRepository.findById(id).map(existingDirector -> {
+    public DirectorEntity partialUpdate(String name, DirectorEntity director) {
+        return directorRepository.findByName(name).map(existingDirector -> {
             Optional.ofNullable(director.getName()).ifPresent(existingDirector::setName);
             Optional.ofNullable(director.getAge()).ifPresent(existingDirector::setAge);
             return directorRepository.save(existingDirector);
@@ -57,9 +58,9 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Transactional
     @Override
-    public void delete(Long id) {
-        if (existsById(id)) {
-            directorRepository.deleteById(id);
+    public void delete(String name) {
+        if (findByName(name).isPresent()) {
+            directorRepository.deleteByName(name);
         } else {
             throw new RuntimeException("Director Not Found");
         }
