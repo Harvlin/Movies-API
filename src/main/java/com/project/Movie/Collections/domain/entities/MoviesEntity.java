@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class MoviesEntity {
 
     @Id
+    @Column(nullable = false, unique = true)
     private String title;
 
     private String description;
@@ -23,7 +24,7 @@ public class MoviesEntity {
     @JoinColumn(name = "genre")
     private GenreEntity genre;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "director")
     private DirectorEntity director;
 }
