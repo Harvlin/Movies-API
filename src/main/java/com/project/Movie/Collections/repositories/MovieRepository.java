@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import java.util.Optional;
 
-public interface MovieRepository extends CrudRepository<MoviesEntity, Long>, PagingAndSortingRepository<MoviesEntity, Long> {
+public interface MovieRepository extends CrudRepository<MoviesEntity, String>, PagingAndSortingRepository<MoviesEntity, String> {
     Optional<MoviesEntity> findByTitle (String title);
 }

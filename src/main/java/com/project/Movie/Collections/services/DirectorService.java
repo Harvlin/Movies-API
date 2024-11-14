@@ -15,8 +15,6 @@ public interface DirectorService {
 
     Optional<DirectorEntity> findByName(String name);
 
-    boolean existsById(Long id);
-
     DirectorEntity partialUpdate(String name, DirectorEntity director);
 
     void delete(String name);

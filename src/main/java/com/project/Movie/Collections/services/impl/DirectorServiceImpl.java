@@ -41,11 +41,6 @@ public class DirectorServiceImpl implements DirectorService {
         return directorRepository.findByName(name);
     }
 
-    @Override
-    public boolean existsById(Long id) {
-        return directorRepository.existsById(id);
-    }
-
     @Transactional
     @Override
     public DirectorEntity partialUpdate(String name, DirectorEntity director) {
@@ -59,10 +54,8 @@ public class DirectorServiceImpl implements DirectorService {
     @Transactional
     @Override
     public void delete(String name) {
-        if (findByName(name).isPresent()) {
-            directorRepository.deleteByName(name);
-        } else {
-            throw new RuntimeException("Director Not Found");
-        }
+        directorRepository.findByName(name)
+                .ifPresentOrElse(directorRepository::delete,
+                        () -> { throw new RuntimeException("Director Not Found with name: " + name); });
     }
 }
