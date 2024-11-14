@@ -32,20 +32,21 @@ public class DirectorsController {
     }
 
     @GetMapping
-    public Page<DirectorDto> listDirectors(Pageable pageable) {
-        Page<DirectorEntity> directorEntities = directorService.findAll(pageable);
-        return directorEntities.map(directorMapper::mapTo);
+    public ResponseEntity<Page<DirectorDto>> listDirectors(Pageable pageable) {
+        Page<DirectorDto> directorDtos = directorService.findAll(pageable).map(directorMapper::mapTo);
+        return ResponseEntity.ok(directorDtos);
     }
 
+
     @GetMapping("/{name}")
-    public ResponseEntity<DirectorDto> getDirector(@PathVariable String name) {
+    public ResponseEntity<DirectorDto> getDirector(@PathVariable("name") String name) {
         return directorService.findByName(name)
                 .map(directorEntity -> ResponseEntity.ok(directorMapper.mapTo(directorEntity)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PutMapping("/{name}")
-    public ResponseEntity<DirectorDto> fullUpdateDirector(@PathVariable String name, @RequestBody DirectorDto directorDto) {
+    public ResponseEntity<DirectorDto> fullUpdateDirector(@PathVariable("name") String name, @RequestBody DirectorDto directorDto) {
         return directorService.findByName(name)
                 .map(existingDirector -> {
                     DirectorEntity directorEntity = directorMapper.mapFrom(directorDto);
@@ -56,7 +57,7 @@ public class DirectorsController {
     }
 
     @PatchMapping("/{name}")
-    public ResponseEntity<DirectorDto> partialUpdateDirector(@PathVariable String name, @RequestBody DirectorDto directorDto) {
+    public ResponseEntity<DirectorDto> partialUpdateDirector(@PathVariable("name") String name, @RequestBody DirectorDto directorDto) {
         return directorService.findByName(name)
                 .map(existingDirector -> {
                     DirectorEntity directorEntity = directorMapper.mapFrom(directorDto);
@@ -67,7 +68,7 @@ public class DirectorsController {
     }
 
     @DeleteMapping("/{name}")
-    public ResponseEntity<Void> deleteDirector(@PathVariable String name) {
+    public ResponseEntity<Void> deleteDirector(@PathVariable("name") String name) {
         if (!directorService.findByName(name).isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
