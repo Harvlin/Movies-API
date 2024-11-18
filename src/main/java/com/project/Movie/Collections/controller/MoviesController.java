@@ -1,8 +1,6 @@
 package com.project.Movie.Collections.controller;
 
-import com.project.Movie.Collections.domain.dto.DirectorDto;
 import com.project.Movie.Collections.domain.dto.MoviesDto;
-import com.project.Movie.Collections.domain.entities.DirectorEntity;
 import com.project.Movie.Collections.domain.entities.MoviesEntity;
 import com.project.Movie.Collections.mappers.Mapper;
 import com.project.Movie.Collections.services.MovieService;
@@ -16,63 +14,63 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "/api/movies")
 public class MoviesController {
-    private final MovieService moviesService;
-    private final Mapper<MoviesEntity, MoviesDto> moviesMapper;
+    private final MovieService movieService;
+    private final Mapper<MoviesEntity, MoviesDto> movieMapper;
 
     @Autowired
-    public MoviesController(MovieService moviesService, Mapper<MoviesEntity, MoviesDto> moviesMapper) {
-        this.moviesService = moviesService;
-        this.moviesMapper = moviesMapper;
+    public MoviesController(MovieService movieService, Mapper<MoviesEntity, MoviesDto> movieMapper) {
+        this.movieService = movieService;
+        this.movieMapper = movieMapper;
     }
 
     @PostMapping
     public ResponseEntity<MoviesDto> createMovie(@RequestBody MoviesDto movieDto) {
-        MoviesEntity movieEntity = moviesMapper.mapFrom(movieDto);
-        MoviesEntity savedMoviesEntity = moviesService.save(movieEntity);
-        return ResponseEntity.status(HttpStatus.CREATED).body(moviesMapper.mapTo(savedMoviesEntity));
+        MoviesEntity movieEntity = movieMapper.mapFrom(movieDto);
+        MoviesEntity savedMovieEntity = movieService.save(movieEntity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(movieMapper.mapTo(savedMovieEntity));
     }
 
     @GetMapping
     public ResponseEntity<Page<MoviesDto>> listMovies(Pageable pageable) {
-        Page<MoviesDto> moviesDtos = moviesService.findAll(pageable).map(moviesMapper::mapTo);
-        return ResponseEntity.ok(moviesDtos);
+        Page<MoviesDto> movieDtos = movieService.findAll(pageable).map(movieMapper::mapTo);
+        return ResponseEntity.ok(movieDtos);
     }
 
     @GetMapping("/{title}")
     public ResponseEntity<MoviesDto> getMovie(@PathVariable("title") String title) {
-        return moviesService.findByTitle(title)
-                .map(moviesEntity -> ResponseEntity.ok(moviesMapper.mapTo(moviesEntity)))
+        return movieService.findByTitle(title)
+                .map(movieEntity -> ResponseEntity.ok(movieMapper.mapTo(movieEntity)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PutMapping("/{title}")
     public ResponseEntity<MoviesDto> fullUpdateMovie(@PathVariable("title") String title, @RequestBody MoviesDto movieDto) {
-        return moviesService.findByTitle(title)
+        return movieService.findByTitle(title)
                 .map(existingDirector -> {
-                    MoviesEntity movieEntity = moviesMapper.mapFrom(movieDto);
-                    MoviesEntity savedMovieEntity = moviesService.save(movieEntity);
-                    return ResponseEntity.ok(moviesMapper.mapTo(savedMovieEntity));
+                    MoviesEntity movieEntity = movieMapper.mapFrom(movieDto);
+                    MoviesEntity savedMovieEntity = movieService.save(movieEntity);
+                    return ResponseEntity.ok(movieMapper.mapTo(savedMovieEntity));
                 })
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PatchMapping("/{title}")
     public ResponseEntity<MoviesDto> partialUpdateMovie(@PathVariable("title") String title, @RequestBody MoviesDto movieDto) {
-        return moviesService.findByTitle(title)
+        return movieService.findByTitle(title)
                 .map(existingDirector -> {
-                    MoviesEntity movieEntity = moviesMapper.mapFrom(movieDto);
-                    MoviesEntity updatedMovieEntity = moviesService.partialUpdate(title, movieEntity);
-                    return ResponseEntity.ok(moviesMapper.mapTo(updatedMovieEntity));
+                    MoviesEntity movieEntity = movieMapper.mapFrom(movieDto);
+                    MoviesEntity updatedMovieEntity = movieService.partialUpdate(title, movieEntity);
+                    return ResponseEntity.ok(movieMapper.mapTo(updatedMovieEntity));
                 })
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @DeleteMapping("/{title}")
     public ResponseEntity<Void> deleteMovie(@PathVariable("title") String title) {
-        if (!moviesService.findByTitle(title).isPresent()) {
+        if (!movieService.findByTitle(title).isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        moviesService.deleteByTitle(title);
+        movieService.deleteByTitle(title);
         return ResponseEntity.noContent().build();
     }
 }

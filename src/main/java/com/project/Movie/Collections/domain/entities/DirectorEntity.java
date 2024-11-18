@@ -1,5 +1,6 @@
 package com.project.Movie.Collections.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +26,9 @@ public class DirectorEntity {
 
     private Integer age;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "director", cascade = CascadeType.ALL)
     private List<MoviesEntity> movies;
 }
+
+

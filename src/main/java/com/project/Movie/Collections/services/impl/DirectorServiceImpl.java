@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -23,12 +22,10 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Override
     public DirectorEntity save(DirectorEntity director) {
-        return directorRepository.findByName(director.getName())
-                .map(existingDirector -> {
-                    existingDirector.setAge(director.getAge());
-                    return directorRepository.save(existingDirector);
-                })
-                .orElseGet(() -> directorRepository.save(director));
+        DirectorEntity existingDirector = directorRepository.findByName(director.getName())
+                .orElse(director);
+        existingDirector.setAge(director.getAge());
+        return directorRepository.save(existingDirector);
     }
 
     @Override
@@ -41,7 +38,6 @@ public class DirectorServiceImpl implements DirectorService {
         return directorRepository.findByName(name);
     }
 
-    @Transactional
     @Override
     public DirectorEntity partialUpdate(String name, DirectorEntity director) {
         return directorRepository.findByName(name).map(existingDirector -> {
@@ -51,7 +47,6 @@ public class DirectorServiceImpl implements DirectorService {
         }).orElseThrow(() -> new RuntimeException("Director Not Found"));
     }
 
-    @Transactional
     @Override
     public void delete(String name) {
         directorRepository.findByName(name)

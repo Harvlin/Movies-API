@@ -37,25 +37,6 @@ public class DirectorsController {
         return ResponseEntity.ok(directorDtos);
     }
 
-
-    @GetMapping("/{name}")
-    public ResponseEntity<DirectorDto> getDirector(@PathVariable("name") String name) {
-        return directorService.findByName(name)
-                .map(directorEntity -> ResponseEntity.ok(directorMapper.mapTo(directorEntity)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
-
-    @PutMapping("/{name}")
-    public ResponseEntity<DirectorDto> fullUpdateDirector(@PathVariable("name") String name, @RequestBody DirectorDto directorDto) {
-        return directorService.findByName(name)
-                .map(existingDirector -> {
-                    DirectorEntity directorEntity = directorMapper.mapFrom(directorDto);
-                    DirectorEntity savedDirectorEntity = directorService.save(directorEntity);
-                    return ResponseEntity.ok(directorMapper.mapTo(savedDirectorEntity));
-                })
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
-
     @PatchMapping("/{name}")
     public ResponseEntity<DirectorDto> partialUpdateDirector(@PathVariable("name") String name, @RequestBody DirectorDto directorDto) {
         return directorService.findByName(name)

@@ -1,5 +1,6 @@
 package com.project.Movie.Collections.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,16 +16,21 @@ import lombok.NoArgsConstructor;
 public class MoviesEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(nullable = false, unique = true)
     private String title;
 
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "genre")
+    @JoinColumn(name = "genre_name", referencedColumnName = "name", nullable = false)
     private GenreEntity genre;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "director")
+    @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(name = "director_id", referencedColumnName = "id", nullable = false)
     private DirectorEntity director;
 }
+

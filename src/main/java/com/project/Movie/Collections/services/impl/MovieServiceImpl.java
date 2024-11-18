@@ -7,38 +7,50 @@ import com.project.Movie.Collections.repositories.MovieRepository;
 import com.project.Movie.Collections.services.DirectorService;
 import com.project.Movie.Collections.services.GenreService;
 import com.project.Movie.Collections.services.MovieService;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class MovieServiceImpl implements MovieService {
-    private MovieRepository movieRepository;
+
+    private final MovieRepository movieRepository;
     private final DirectorService directorService;
     private final GenreService genreService;
 
+    @Autowired
     public MovieServiceImpl(MovieRepository movieRepository, DirectorService directorService, GenreService genreService) {
         this.movieRepository = movieRepository;
         this.directorService = directorService;
         this.genreService = genreService;
     }
 
+    @Transactional
     @Override
     public MoviesEntity save(MoviesEntity movie) {
-        return movieRepository.findByTitle(movie.getTitle())
-                .map(existingMovie -> {
-                    existingMovie.setDescription(movie.getDescription());
-                    existingMovie.setGenre(genreService.save(movie.getGenre()));
-                    existingMovie.setDirector(directorService.save(movie.getDirector()));
-                    return movieRepository.save(existingMovie);
-                }).orElseGet(() -> {
-                    movie.setGenre(genreService.save(movie.getGenre()));
-                    movie.setDirector(directorService.save(movie.getDirector()));
-                    return movieRepository.save(movie);
-                });
+        GenreEntity savedGenre = genreService.save(movie.getGenre());
+        movie.setGenre(savedGenre);
+
+        DirectorEntity director = directorService.findByName(movie.getDirector().getName())
+                .orElseThrow(() -> new IllegalArgumentException("Director not found"));
+        movie.setDirector(director);
+
+        Optional<MoviesEntity> existingMovieOpt = movieRepository.findByTitle(movie.getTitle());
+        if (existingMovieOpt.isPresent()) {
+            MoviesEntity existingMovie = existingMovieOpt.get();
+            existingMovie.setDescription(movie.getDescription());
+            existingMovie.setGenre(savedGenre);
+            existingMovie.setDirector(director);
+            return movieRepository.save(existingMovie);
+        }
+
+        return movieRepository.save(movie);
     }
 
     @Override
@@ -52,7 +64,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MoviesEntity> findByGenre(String genreName) {
+    public Set<MoviesEntity> findByGenre(String genreName) {
         GenreEntity genre = genreService.findByName(genreName)
                 .orElseThrow(() -> new IllegalArgumentException("Genre not found."));
         return genre.getMovies();
