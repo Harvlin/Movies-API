@@ -1,6 +1,8 @@
 package com.project.Movie.Collections.controller;
 
 import com.project.Movie.Collections.domain.dto.MoviesDto;
+import com.project.Movie.Collections.domain.entities.DirectorEntity;
+import com.project.Movie.Collections.domain.entities.GenreEntity;
 import com.project.Movie.Collections.domain.entities.MoviesEntity;
 import com.project.Movie.Collections.mappers.Mapper;
 import com.project.Movie.Collections.services.MovieService;
@@ -23,12 +25,25 @@ public class MoviesController {
         this.movieMapper = movieMapper;
     }
 
-    @PostMapping
-    public ResponseEntity<MoviesDto> createMovie(@RequestBody MoviesDto movieDto) {
-        MoviesEntity movieEntity = movieMapper.mapFrom(movieDto);
-        MoviesEntity savedMovieEntity = movieService.save(movieEntity);
-        return ResponseEntity.status(HttpStatus.CREATED).body(movieMapper.mapTo(savedMovieEntity));
+    @PostMapping()
+    public ResponseEntity<MoviesEntity> createMovie(@RequestBody MoviesDto moviesDto) {
+        MoviesEntity movie = new MoviesEntity();
+        movie.setTitle(moviesDto.getTitle());
+        movie.setDescription(moviesDto.getDescription());
+
+        GenreEntity genre = new GenreEntity();
+        genre.setName(moviesDto.getGenre().getNames());
+        movie.setGenre(genre);
+
+        DirectorEntity director = new DirectorEntity();
+        director.setName(moviesDto.getDirector().getName());
+        director.setAge(moviesDto.getDirector().getAge());
+        movie.setDirector(director);
+
+        MoviesEntity savedMovie = movieService.save(movie);
+        return ResponseEntity.ok(savedMovie);
     }
+
 
     @GetMapping
     public ResponseEntity<Page<MoviesDto>> listMovies(Pageable pageable) {

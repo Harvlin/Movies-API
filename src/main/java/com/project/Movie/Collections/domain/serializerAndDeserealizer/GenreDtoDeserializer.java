@@ -13,7 +13,12 @@ public class GenreDtoDeserializer extends JsonDeserializer<GenreDto> {
     @Override
     public GenreDto deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-        String names = node.get("names").asText();
-        return GenreDto.builder().names(names).build();
+        String name = node.has("name") ? node.get("name").asText() : null;
+
+        if (name == null) {
+            throw new IllegalArgumentException("The 'name' field in 'genre' is required.");
+        }
+
+        return GenreDto.builder().names(name).build();
     }
 }

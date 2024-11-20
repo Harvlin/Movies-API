@@ -34,11 +34,13 @@ public class MovieServiceImpl implements MovieService {
     @Transactional
     @Override
     public MoviesEntity save(MoviesEntity movie) {
+        System.out.println("Incoming Movie: " + movie);
         GenreEntity savedGenre = genreService.save(movie.getGenre());
         movie.setGenre(savedGenre);
 
         DirectorEntity director = directorService.findByName(movie.getDirector().getName())
-                .orElseThrow(() -> new IllegalArgumentException("Director not found"));
+                .orElseGet(() -> directorService.save(movie.getDirector()));
+
         movie.setDirector(director);
 
         Optional<MoviesEntity> existingMovieOpt = movieRepository.findByTitle(movie.getTitle());
@@ -52,6 +54,7 @@ public class MovieServiceImpl implements MovieService {
 
         return movieRepository.save(movie);
     }
+
 
     @Override
     public Page<MoviesEntity> findAll(Pageable pageable) {

@@ -24,9 +24,11 @@ public class MoviesEntity {
 
     private String description;
 
-    @ManyToOne
+    @JsonManagedReference
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "genre_name", referencedColumnName = "name", nullable = false)
     private GenreEntity genre;
+
 
     @JsonManagedReference
     @ManyToOne
