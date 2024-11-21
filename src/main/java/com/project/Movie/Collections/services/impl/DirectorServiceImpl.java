@@ -22,10 +22,7 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Override
     public DirectorEntity save(DirectorEntity director) {
-        DirectorEntity existingDirector = directorRepository.findByName(director.getName())
-                .orElse(director);
-        existingDirector.setAge(director.getAge());
-        return directorRepository.save(existingDirector);
+        return directorRepository.save(director);
     }
 
     @Override

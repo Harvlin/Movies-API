@@ -1,8 +1,6 @@
 package com.project.Movie.Collections.controller;
 
 import com.project.Movie.Collections.domain.dto.MoviesDto;
-import com.project.Movie.Collections.domain.entities.DirectorEntity;
-import com.project.Movie.Collections.domain.entities.GenreEntity;
 import com.project.Movie.Collections.domain.entities.MoviesEntity;
 import com.project.Movie.Collections.mappers.Mapper;
 import com.project.Movie.Collections.services.MovieService;
@@ -27,28 +25,20 @@ public class MoviesController {
 
     @PostMapping()
     public ResponseEntity<MoviesEntity> createMovie(@RequestBody MoviesDto moviesDto) {
-        MoviesEntity movie = new MoviesEntity();
-        movie.setTitle(moviesDto.getTitle());
-        movie.setDescription(moviesDto.getDescription());
+        MoviesEntity moviesEntity = movieMapper.mapFrom(moviesDto);
+        MoviesEntity savedMovieEntity = movieService.save(moviesEntity);
 
-        GenreEntity genre = new GenreEntity();
-        genre.setName(moviesDto.getGenre().getNames());
-        movie.setGenre(genre);
-
-        DirectorEntity director = new DirectorEntity();
-        director.setName(moviesDto.getDirector().getName());
-        director.setAge(moviesDto.getDirector().getAge());
-        movie.setDirector(director);
-
-        MoviesEntity savedMovie = movieService.save(movie);
-        return ResponseEntity.ok(savedMovie);
+        if (movieService.isExist(savedMovieEntity.getId())) {
+            return new ResponseEntity<>(moviesEntity, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(moviesEntity, HttpStatus.CREATED);
+        }
     }
 
-
     @GetMapping
-    public ResponseEntity<Page<MoviesDto>> listMovies(Pageable pageable) {
-        Page<MoviesDto> movieDtos = movieService.findAll(pageable).map(movieMapper::mapTo);
-        return ResponseEntity.ok(movieDtos);
+    public Page<MoviesDto> listMovies(Pageable pageable) {
+        Page<MoviesEntity> moviesEntities = movieService.findAll(pageable);
+        return moviesEntities.map(movieMapper::mapTo);
     }
 
     @GetMapping("/{title}")

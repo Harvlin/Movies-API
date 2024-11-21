@@ -23,6 +23,8 @@ public interface MovieService {
 
     List<MoviesEntity> findByDirector(String directorName);
 
+    boolean isExist(Long id);
+
     MoviesEntity partialUpdate(String title, MoviesEntity movie);
 
     void deleteByTitle(String title);

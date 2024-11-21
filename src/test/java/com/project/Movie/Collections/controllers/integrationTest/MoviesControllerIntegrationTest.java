@@ -1,3 +1,5 @@
+package com.project.Movie.Collections.controllers.integrationTest;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.Movie.Collections.TestDataUtil;
 import com.project.Movie.Collections.domain.dto.DirectorDto;
@@ -6,7 +8,6 @@ import com.project.Movie.Collections.domain.dto.MoviesDto;
 import com.project.Movie.Collections.services.MovieService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -26,7 +27,6 @@ public class MoviesControllerIntegrationTest {
     private ObjectMapper objectMapper;
     private MovieService movieService;
 
-    @Autowired
     public MoviesControllerIntegrationTest(ObjectMapper objectMapper, MovieService movieService, MockMvc mockMvc) {
         this.objectMapper = objectMapper;
         this.mockMvc = mockMvc;

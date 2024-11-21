@@ -16,7 +16,7 @@ import java.util.Set;
 @JsonDeserialize(using = GenreDtoDeserializer.class)
 public class GenreDto {
 
-    private String names;
+    private String name;
 
     @JsonIgnore
     private Set<MoviesDto> movies;

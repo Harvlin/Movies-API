@@ -1,6 +1,5 @@
 package com.project.Movie.Collections.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,8 +20,9 @@ public class GenreEntity {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<MoviesEntity> movies;
+
 
 }

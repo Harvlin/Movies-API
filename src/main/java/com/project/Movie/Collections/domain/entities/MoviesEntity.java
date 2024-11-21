@@ -1,6 +1,8 @@
 package com.project.Movie.Collections.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 @Table(name = "movies")
 public class MoviesEntity {
@@ -26,13 +29,13 @@ public class MoviesEntity {
 
     @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "genre_name", referencedColumnName = "name", nullable = false)
+    @JoinColumn(name = "genre_name",nullable = false)
     private GenreEntity genre;
 
-
     @JsonManagedReference
-    @ManyToOne
-    @JoinColumn(name = "director_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "director_id", nullable = false)
     private DirectorEntity director;
+
 }
 

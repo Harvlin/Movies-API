@@ -34,27 +34,17 @@ public class MovieServiceImpl implements MovieService {
     @Transactional
     @Override
     public MoviesEntity save(MoviesEntity movie) {
-        System.out.println("Incoming Movie: " + movie);
-        GenreEntity savedGenre = genreService.save(movie.getGenre());
-        movie.setGenre(savedGenre);
+        GenreEntity genre = genreService.findByName(movie.getGenre().getName())
+                .orElseGet(() -> genreService.save(movie.getGenre()));
 
         DirectorEntity director = directorService.findByName(movie.getDirector().getName())
                 .orElseGet(() -> directorService.save(movie.getDirector()));
 
+        movie.setGenre(genre);
         movie.setDirector(director);
-
-        Optional<MoviesEntity> existingMovieOpt = movieRepository.findByTitle(movie.getTitle());
-        if (existingMovieOpt.isPresent()) {
-            MoviesEntity existingMovie = existingMovieOpt.get();
-            existingMovie.setDescription(movie.getDescription());
-            existingMovie.setGenre(savedGenre);
-            existingMovie.setDirector(director);
-            return movieRepository.save(existingMovie);
-        }
 
         return movieRepository.save(movie);
     }
-
 
     @Override
     public Page<MoviesEntity> findAll(Pageable pageable) {
@@ -103,5 +93,10 @@ public class MovieServiceImpl implements MovieService {
         MoviesEntity movie = movieRepository.findByTitle(title)
                 .orElseThrow(() -> new RuntimeException("Movie Not Found with title: " + title));
         movieRepository.delete(movie);
+    }
+
+    @Override
+    public boolean isExist(Long id) {
+        return movieRepository.existsById(id);
     }
 }

@@ -8,6 +8,4 @@ import java.util.Optional;
 
 public interface DirectorRepository extends CrudRepository<DirectorEntity, Long>, PagingAndSortingRepository<DirectorEntity, Long> {
     Optional<DirectorEntity> findByName(String name);
-
-    void deleteByName(String name);
 }
